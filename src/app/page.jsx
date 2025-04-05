@@ -13,6 +13,8 @@ export default function Home() {
     name: "",
     email: "",
     phone: "",
+    monthly: false,
+    selectedPlan: "",
   });
 
   const updateFormData = (field, value) => {
@@ -190,6 +192,8 @@ export default function Home() {
         )}
         {currentComponent === 1 && (
           <Step2
+            formData={formData}
+            updateFormData={updateFormData}
             showPreviousComponent={showPreviousComponent}
             showNextComponent={showNextComponent}
           />

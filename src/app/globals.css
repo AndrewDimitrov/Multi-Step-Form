@@ -57,6 +57,15 @@ body {
   border-color: hsl(243, 100%, 62%) !important;
 }
 
+.planNotClicked {
+  border-color: hsl(229, 24%, 87%);
+}
+
+.planClicked {
+  border-color: hsl(243, 100%, 62%) !important;
+  background-color: hsl(217, 100%, 97%) !important;
+}
+
 .toggle {
   width: 48px;
   height: 24px;
@@ -71,4 +80,8 @@ body {
 
 .toggle:checked {
   justify-items: end;
+}
+
+.checkboxAdd {
+  accent-color: hsl(243, 100%, 62%) !important;
 }

@@ -1,14 +1,37 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const Step2 = ({ showPreviousComponent, showNextComponent }) => {
-  const [isChecked, setIsChecked] = useState(false);
+const Step2 = ({
+  formData,
+  updateFormData,
+  showPreviousComponent,
+  showNextComponent,
+}) => {
+  const [isChecked, setIsChecked] = useState(formData.monthly);
+  const [selectedPlan, setSelectedPlan] = useState(
+    formData.selectedPlan || "arcade" // Default to "arcade" if no plan is set
+  );
 
+  // Update formData when toggle is clicked
   const handleToggle = () => {
-    setIsChecked((prevState) => !prevState);
+    const newChecked = !isChecked;
+    setIsChecked(newChecked);
+    updateFormData("monthly", newChecked); // Update the parent component's state
   };
+
+  // Set selected plan and update the parent component's state
+  const handlePlanClick = (planName) => {
+    setSelectedPlan(planName);
+    updateFormData("selectedPlan", planName); // Update the parent component's state
+  };
+
+  // This useEffect is used to set initial state when formData changes
+  useEffect(() => {
+    setIsChecked(formData.monthly);
+    setSelectedPlan(formData.selectedPlan || "arcade"); // Ensure default is "arcade"
+  }, [formData]); // Re-run the effect if formData changes
 
   return (
     <div className="flex flex-col justify-center gap-8 h-full">
@@ -19,12 +42,12 @@ const Step2 = ({ showPreviousComponent, showNextComponent }) => {
         </p>
         <div className="flex gap-4">
           <div className="grid grid-cols-3 gap-4 w-full mb-8">
+            {/* Arcade Plan */}
             <label
-              className="text-[1.1rem] font-extrabold border-1 p-4 rounded-lg cursor-pointer transition-all duration-200 ease-in-out plan"
-              style={{
-                color: "hsl(213, 96%, 18%)",
-                borderColor: "hsl(229, 24%, 87%)",
-              }}
+              className={`text-[1.1rem] font-extrabold border-1 p-4 rounded-lg cursor-pointer transition-all duration-200 ease-in-out plan ${
+                selectedPlan === "arcade" ? "planClicked" : "planNotClicked"
+              }`}
+              onClick={() => handlePlanClick("arcade")}
             >
               <Image
                 src={"/images/icon-arcade.svg"}
@@ -32,12 +55,6 @@ const Step2 = ({ showPreviousComponent, showNextComponent }) => {
                 width={40}
                 height={40}
                 className="mb-10"
-              />
-              <input
-                type="radio"
-                name="plan"
-                value="arcade"
-                className="hidden"
               />
               Arcade <br />
               {isChecked ? (
@@ -59,25 +76,20 @@ const Step2 = ({ showPreviousComponent, showNextComponent }) => {
                 </span>
               )}
             </label>
+
+            {/* Advanced Plan */}
             <label
-              className="text-[1.1rem] font-extrabold border-1 p-4 rounded-lg cursor-pointer transition-all duration-200 ease-in-out plan"
-              style={{
-                color: "hsl(213, 96%, 18%)",
-                borderColor: "hsl(229, 24%, 87%)",
-              }}
+              className={`text-[1.1rem] font-extrabold border-1 p-4 rounded-lg cursor-pointer transition-all duration-200 ease-in-out plan ${
+                selectedPlan === "advanced" ? "planClicked" : "planNotClicked"
+              }`}
+              onClick={() => handlePlanClick("advanced")}
             >
               <Image
                 src={"/images/icon-advanced.svg"}
-                alt={"Arcade Image"}
+                alt={"Advanced Image"}
                 width={40}
                 height={40}
                 className="mb-10"
-              />
-              <input
-                type="radio"
-                name="plan"
-                value="advanced"
-                className="hidden"
               />
               Advanced <br />
               {isChecked ? (
@@ -99,21 +111,21 @@ const Step2 = ({ showPreviousComponent, showNextComponent }) => {
                 </span>
               )}
             </label>
+
+            {/* Pro Plan */}
             <label
-              className="text-[1.1rem] font-extrabold border-1 p-4 rounded-lg cursor-pointer transition-all duration-200 ease-in-out plan"
-              style={{
-                color: "hsl(213, 96%, 18%)",
-                borderColor: "hsl(229, 24%, 87%)",
-              }}
+              className={`text-[1.1rem] font-extrabold border-1 p-4 rounded-lg cursor-pointer transition-all duration-200 ease-in-out plan ${
+                selectedPlan === "pro" ? "planClicked" : "planNotClicked"
+              }`}
+              onClick={() => handlePlanClick("pro")}
             >
               <Image
                 src={"/images/icon-pro.svg"}
-                alt={"Arcade Image"}
+                alt={"Pro Image"}
                 width={40}
                 height={40}
                 className="mb-10"
               />
-              <input type="radio" name="plan" value="pro" className="hidden" />
               Pro <br />
               {isChecked ? (
                 <>
@@ -136,28 +148,27 @@ const Step2 = ({ showPreviousComponent, showNextComponent }) => {
             </label>
           </div>
         </div>
+
+        {/* Toggle for Monthly/Yearly */}
         <div
           className="flex justify-center rounded-lg p-4 gap-4"
           style={{ backgroundColor: "hsl(217, 100%, 97%)" }}
         >
           <p
             className="mb-1 font-extrabold text-[13.28px]"
-            style={
-              isChecked === true
-                ? { color: "hsl(231, 11%, 63%)" }
-                : { color: "inherit" }
-            }
+            style={isChecked ? { color: "hsl(231, 11%, 63%)" } : {}}
           >
             Monthly
           </p>
-          <input type="checkbox" className="toggle" onClick={handleToggle} />
+          <input
+            type="checkbox"
+            className="toggle"
+            checked={isChecked}
+            onChange={handleToggle}
+          />
           <p
             className="mb-1 font-extrabold text-[13.28px]"
-            style={
-              isChecked === false
-                ? { color: "hsl(231, 11%, 63%)" }
-                : { color: "inherit" }
-            }
+            style={!isChecked ? { color: "hsl(231, 11%, 63%)" } : {}}
           >
             Yearly
           </p>

@@ -8,8 +8,22 @@ const Step4 = ({ showPreviousComponent }) => {
         Double-check everything looks OK before confirming.
       </p>
       <div>Total (per month/year)</div>
-      <button onClick={showPreviousComponent}>Go Back</button>
-      <button>Confirm</button>
+
+      <div className="flex justify-between mt-auto">
+        <button
+          className="border-none py-4 px-6 rounded-lg font-medium text-base cursor-pointer transition-all duration-200 ease-in-out back"
+          style={{ color: "hsl(231, 11%, 63%)" }}
+          onClick={showPreviousComponent}
+        >
+          Go Back
+        </button>
+        <button
+          className="text-white border-none py-4 px-6 rounded-lg font-medium text-base cursor-pointer transition-all duration-200 ease-in-out next"
+          style={{ background: "hsl(243, 100%, 62%)" }}
+        >
+          Confirm
+        </button>
+      </div>
     </div>
   );
 };

@@ -2,11 +2,6 @@ import { useState, useEffect } from "react";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import validator from "validator";
 
-// Phone number validation function
-const validatePhoneNumber = (phoneNumber) => {
-  return isValidPhoneNumber(phoneNumber);
-};
-
 const Step1 = ({ formData, updateFormData, showNextComponent }) => {
   const [name, setName] = useState(formData.name || "");
   const [email, setEmail] = useState(formData.email || "");
@@ -54,6 +49,11 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
     if (validatePhoneNumber(e.target.value)) {
       setPhoneError("");
     }
+  };
+
+  // Phone number validation function
+  const validatePhoneNumber = (phoneNumber) => {
+    return isValidPhoneNumber(phoneNumber);
   };
 
   const checkIfRight = () => {
@@ -118,7 +118,7 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             value={name}
             onChange={handleNameChange}
             placeholder="Enter your name"
-            className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium ${
+            className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium customFocus ${
               isSubmitClicked && nameError
                 ? "border-red-500"
                 : "border-gray-300"
@@ -145,7 +145,7 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             value={email}
             onChange={handleEmailChange}
             placeholder="e.g. stephenking@lorem.com"
-            className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium ${
+            className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium customFocus ${
               isSubmitClicked && emailError
                 ? "border-red-500"
                 : "border-gray-300"
@@ -172,7 +172,7 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             value={phone}
             onChange={handlePhoneChange}
             placeholder="e.g. +1 234 567 890"
-            className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium ${
+            className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium customFocus ${
               isSubmitClicked && phoneError
                 ? "border-red-500"
                 : "border-gray-300"
