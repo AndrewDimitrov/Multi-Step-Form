@@ -9,6 +9,19 @@ const Step3 = dynamic(() => import("../../components/Step3"), { ssr: false });
 const Step4 = dynamic(() => import("../../components/Step4"), { ssr: false });
 
 export default function Home() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  const updateFormData = (field, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
   const [currentComponent, setCurrentComponent] = useState(0);
 
   const showNextComponent = () => {
@@ -39,7 +52,7 @@ export default function Home() {
           backgroundImage: "url('/images/bg-sidebar-desktop.svg')",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
-          width: "max(250px, 32%)",
+          width: "max(250px, 33%)",
         }}
       >
         <div
@@ -167,9 +180,13 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="pt-[4rem] pr-[2rem] pb-[2rem] pl-[2rem] w-full max-w-[600px]">
+      <div className="mx-auto pt-[3rem] pr-[2rem] pb-[2rem] pl-[2rem] w-full max-w-[600px]">
         {currentComponent === 0 && (
-          <Step1 showNextComponent={showNextComponent} />
+          <Step1
+            formData={formData} // Pass formData to Step1
+            updateFormData={updateFormData} // Pass updateFormData function to Step1
+            showNextComponent={showNextComponent}
+          />
         )}
         {currentComponent === 1 && (
           <Step2

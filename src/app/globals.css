@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
 @font-face {
   font-family: "Ubuntu";
@@ -25,6 +26,8 @@
 }
 
 :root {
+  --inputFocus: hsl(243, 100%, 62%);
+  --inputBorder: hsl(229, 24%, 87%);
   --background: hsl(215, 100%, 97%);
 }
 
@@ -36,4 +39,36 @@ body {
   background: var(--background);
   color: hsl(213, 96%, 18%);
   font-family: "Ubuntu", sans-serif;
+}
+
+.customFocus:focus {
+  border-color: var(--inputFocus) !important;
+}
+
+.back:hover {
+  color: hsl(213, 96%, 18%) !important;
+}
+
+.next:hover {
+  filter: brightness(1.5);
+}
+
+.plan:hover {
+  border-color: hsl(243, 100%, 62%) !important;
+}
+
+.toggle {
+  width: 48px;
+  height: 24px;
+  padding: 4px;
+  background-color: hsl(213, 96%, 18%);
+}
+
+.toggle:before {
+  width: 16px;
+  background-color: white;
+}
+
+.toggle:checked {
+  justify-items: end;
 }
