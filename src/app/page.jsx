@@ -13,8 +13,11 @@ export default function Home() {
     name: "",
     email: "",
     phone: "",
-    monthly: false,
-    selectedPlan: "",
+    yearly: false,
+    selectedPlan: "arcade",
+    firstAdd: false,
+    secondAdd: false,
+    thirdAdd: false,
   });
 
   const updateFormData = (field, value) => {
@@ -40,7 +43,7 @@ export default function Home() {
 
   return (
     <main
-      className="bg-white flex m-w-full rounded-lg p-4"
+      className="bg-white flex max-w-[96%] rounded-lg p-4"
       style={{
         borderColor: "hsl(231, 100%, 99%)",
         height: "min(82%, 700px)",
@@ -185,8 +188,8 @@ export default function Home() {
       <div className="mx-auto pt-[3rem] pr-[2rem] pb-[2rem] pl-[2rem] w-full max-w-[600px]">
         {currentComponent === 0 && (
           <Step1
-            formData={formData} // Pass formData to Step1
-            updateFormData={updateFormData} // Pass updateFormData function to Step1
+            formData={formData}
+            updateFormData={updateFormData}
             showNextComponent={showNextComponent}
           />
         )}
@@ -200,12 +203,18 @@ export default function Home() {
         )}
         {currentComponent === 2 && (
           <Step3
+            formData={formData}
+            updateFormData={updateFormData}
             showPreviousComponent={showPreviousComponent}
             showNextComponent={showNextComponent}
           />
         )}
         {currentComponent === 3 && (
-          <Step4 showPreviousComponent={showPreviousComponent} />
+          <Step4
+            showPreviousComponent={showPreviousComponent}
+            formData={formData}
+            showClickedComponent={showClickedComponent}
+          />
         )}
       </div>
     </main>

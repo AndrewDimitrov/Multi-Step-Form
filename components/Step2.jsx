@@ -9,16 +9,16 @@ const Step2 = ({
   showPreviousComponent,
   showNextComponent,
 }) => {
-  const [isChecked, setIsChecked] = useState(formData.monthly);
+  const [isChecked, setIsChecked] = useState(formData.yearly);
   const [selectedPlan, setSelectedPlan] = useState(
-    formData.selectedPlan || "arcade" // Default to "arcade" if no plan is set
+    formData.selectedPlan // Default to "arcade" if no plan is set
   );
 
   // Update formData when toggle is clicked
   const handleToggle = () => {
     const newChecked = !isChecked;
     setIsChecked(newChecked);
-    updateFormData("monthly", newChecked); // Update the parent component's state
+    updateFormData("yearly", newChecked); // Update the parent component's state
   };
 
   // Set selected plan and update the parent component's state
@@ -29,8 +29,8 @@ const Step2 = ({
 
   // This useEffect is used to set initial state when formData changes
   useEffect(() => {
-    setIsChecked(formData.monthly);
-    setSelectedPlan(formData.selectedPlan || "arcade"); // Ensure default is "arcade"
+    setIsChecked(formData.yearly);
+    setSelectedPlan(formData.selectedPlan); // Ensure default is "arcade"
   }, [formData]); // Re-run the effect if formData changes
 
   return (
