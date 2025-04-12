@@ -11,7 +11,7 @@ const Step2 = ({
 }) => {
   const [isChecked, setIsChecked] = useState(formData.yearly);
   const [selectedPlan, setSelectedPlan] = useState(
-    formData.selectedPlan // Default to "arcade" if no plan is set
+    formData.selectedPlan
   );
 
   // Update formData when toggle is clicked

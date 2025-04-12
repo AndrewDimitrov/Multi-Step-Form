@@ -1,12 +1,13 @@
 "use client";
-
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
+import { validateFormData } from "../utils/validation";
 
 const Step1 = dynamic(() => import("../../components/Step1"), { ssr: false });
 const Step2 = dynamic(() => import("../../components/Step2"), { ssr: false });
 const Step3 = dynamic(() => import("../../components/Step3"), { ssr: false });
 const Step4 = dynamic(() => import("../../components/Step4"), { ssr: false });
+const Final = dynamic(() => import("../../components/Final"), { ssr: false });
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,12 @@ export default function Home() {
     firstAdd: false,
     secondAdd: false,
     thirdAdd: false,
+  });
+
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
   });
 
   const updateFormData = (field, value) => {
@@ -39,6 +46,21 @@ export default function Home() {
 
   const showClickedComponent = (clickedComponent) => {
     setCurrentComponent(clickedComponent);
+  };
+
+  // This function will be called from Step4 Confirm
+  const validateAndGoToFinal = () => {
+    const errors = validateFormData(formData); // Validate the form data
+    setFormErrors(errors); // Update the formErrors state with the validation results
+
+    // Check if there are any errors
+    if (errors.name || errors.email || errors.phone) {
+      // If errors exist, navigate back to Step1
+      setCurrentComponent(0);
+    } else {
+      // If no errors, proceed to the Final step
+      setCurrentComponent("Final");
+    }
   };
 
   return (
@@ -189,6 +211,7 @@ export default function Home() {
         {currentComponent === 0 && (
           <Step1
             formData={formData}
+            formErrors={formErrors} // Pass down errors to show red borders
             updateFormData={updateFormData}
             showNextComponent={showNextComponent}
           />
@@ -214,8 +237,10 @@ export default function Home() {
             showPreviousComponent={showPreviousComponent}
             formData={formData}
             showClickedComponent={showClickedComponent}
+            validateAndGoToFinal={validateAndGoToFinal} // Pass function to handle confirm click
           />
         )}
+        {currentComponent === "Final" && <Final />}
       </div>
     </main>
   );

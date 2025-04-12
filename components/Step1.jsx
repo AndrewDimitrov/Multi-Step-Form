@@ -3,88 +3,123 @@ import { isValidPhoneNumber } from "libphonenumber-js";
 import validator from "validator";
 
 const Step1 = ({ formData, updateFormData, showNextComponent }) => {
+  // Initialize values from formData.
   const [name, setName] = useState(formData.name || "");
   const [email, setEmail] = useState(formData.email || "");
   const [phone, setPhone] = useState(formData.phone || "");
 
+  // Error messages.
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
 
-  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+  // Touched flags: they are false on initial load so errors are not shown.
+  const [nameTouched, setNameTouched] = useState(!!formData.name);
+  const [emailTouched, setEmailTouched] = useState(!!formData.email);
+  const [phoneTouched, setPhoneTouched] = useState(!!formData.phone);
 
-  // Sync state with formData when it changes
+  // Sync local state with formData (if needed)
   useEffect(() => {
     setName(formData.name || "");
     setEmail(formData.email || "");
     setPhone(formData.phone || "");
-  }, [formData]); // Runs every time formData changes
+  }, [formData]);
+
+  // Validate only if field has been touched.
+  useEffect(() => {
+    if (nameTouched) {
+      if (name.length < 3) {
+        setNameError("Minimum 3 characters required for name.");
+      } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+        setNameError("Invalid name.");
+      } else {
+        setNameError("");
+      }
+    }
+  }, [name, nameTouched]);
+
+  useEffect(() => {
+    if (emailTouched) {
+      if (!validator.isEmail(email)) {
+        setEmailError("Invalid email address.");
+      } else {
+        setEmailError("");
+      }
+    }
+  }, [email, emailTouched]);
+
+  useEffect(() => {
+    if (phoneTouched) {
+      if (!phone || !isValidPhoneNumber(phone)) {
+        setPhoneError("Invalid phone number.");
+      } else {
+        setPhoneError("");
+      }
+    }
+  }, [phone, phoneTouched]);
 
   const handleNameChange = (e) => {
     const newName = e.target.value;
     setName(newName);
-    updateFormData("name", newName); // Update the formData in the parent component
-
-    // Clear error message when user is typing
+    updateFormData("name", newName);
+    setNameTouched(true);
     if (newName.length >= 3 && /^[a-zA-Z\s]+$/.test(newName)) {
       setNameError("");
+    } else if (!/^[a-zA-Z\s]+$/.test(newName)) {
+      setNameError("Invalid name.");
+    } else if (!newName.length >= 3) {
+      setNameError("Minimum 3 characters required for name.");
     }
   };
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    updateFormData("email", e.target.value); // Update the formData in the parent component
-
-    // Clear error message when user is typing
-    if (validator.isEmail(e.target.value)) {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    updateFormData("email", newEmail);
+    setEmailTouched(true);
+    if (validator.isEmail(newEmail)) {
       setEmailError("");
+    } else {
+      setEmailError("Invalid email address.");
     }
   };
 
   const handlePhoneChange = (e) => {
-    setPhone(e.target.value);
-    updateFormData("phone", e.target.value); // Update the formData in the parent component
-
-    // Clear error message when user is typing
-    if (validatePhoneNumber(e.target.value)) {
+    const newPhone = e.target.value;
+    setPhone(newPhone);
+    updateFormData("phone", newPhone);
+    setPhoneTouched(true);
+    if (isValidPhoneNumber(newPhone)) {
       setPhoneError("");
+    } else {
+      setPhoneError("Invalid phone number.");
     }
-  };
-
-  // Phone number validation function
-  const validatePhoneNumber = (phoneNumber) => {
-    return isValidPhoneNumber(phoneNumber);
   };
 
   const checkIfRight = () => {
-    setIsSubmitClicked(true); // Show errors after clicking the button
+    // Mark all fields as touched, so errors show immediately.
+    setNameTouched(true);
+    setEmailTouched(true);
+    setPhoneTouched(true);
 
     let hasError = false;
-
-    // Validate name
+    if (!/^[a-zA-Z\s]+$/.test(name)) {
+      setNameError("Invalid name.");
+      hasError = true;
+    }
     if (name.length < 3) {
       setNameError("Minimum 3 characters required for name.");
       hasError = true;
-    } else if (!/^[a-zA-Z\s]+$/.test(name)) {
-      setNameError("Name should only contain letters and spaces.");
+    }
+    if (!validator.isEmail(email)) {
+      setEmailError("Invalid email address.");
       hasError = true;
     }
-
-    // Validate email
-    if (!email || !validator.isEmail(email)) {
-      setEmailError("Invalid mail address.");
-      hasError = true;
-    }
-
-    // Validate phone number
-    if (!phone || !validatePhoneNumber(phone)) {
+    if (!phone || !isValidPhoneNumber(phone)) {
       setPhoneError("Invalid phone number.");
       hasError = true;
     }
-
-    // If there are no errors, proceed to the next step
     if (!hasError) {
-      console.log("Updated formData before next step:", { name, email, phone });
       showNextComponent();
     }
   };
@@ -105,7 +140,7 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             <label htmlFor="name" className="ml-1 font-medium">
               Name
             </label>
-            {isSubmitClicked && nameError && (
+            {nameError && (
               <p className="mx-1 text-red-500 text-[12.8px] font-semibold">
                 {nameError}
               </p>
@@ -119,9 +154,7 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             onChange={handleNameChange}
             placeholder="Enter your name"
             className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium customFocus ${
-              isSubmitClicked && nameError
-                ? "border-red-500"
-                : "border-gray-300"
+              nameError ? "border-red-500" : "border-gray-300"
             }`}
           />
         </div>
@@ -132,7 +165,7 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             <label htmlFor="email" className="ml-1 font-medium">
               Email Address
             </label>
-            {isSubmitClicked && emailError && (
+            {emailError && (
               <p className="mx-1 text-red-500 text-[12.8px] font-semibold">
                 {emailError}
               </p>
@@ -146,9 +179,7 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             onChange={handleEmailChange}
             placeholder="e.g. stephenking@lorem.com"
             className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium customFocus ${
-              isSubmitClicked && emailError
-                ? "border-red-500"
-                : "border-gray-300"
+              emailError ? "border-red-500" : "border-gray-300"
             }`}
           />
         </div>
@@ -159,7 +190,7 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             <label htmlFor="phone" className="ml-1 font-medium">
               Phone Number
             </label>
-            {isSubmitClicked && phoneError && (
+            {phoneError && (
               <p className="mx-1 text-red-500 text-[12.8px] font-semibold">
                 {phoneError}
               </p>
@@ -173,15 +204,12 @@ const Step1 = ({ formData, updateFormData, showNextComponent }) => {
             onChange={handlePhoneChange}
             placeholder="e.g. +1 234 567 890"
             className={`p-3 text-base border rounded-[0.5rem] outline-none font-medium customFocus ${
-              isSubmitClicked && phoneError
-                ? "border-red-500"
-                : "border-gray-300"
+              phoneError ? "border-red-500" : "border-gray-300"
             }`}
           />
         </div>
       </div>
 
-      {/* Next Step button */}
       <div className="flex justify-end mt-auto">
         <button
           className="text-white border-none py-4 px-6 rounded-lg font-medium text-base cursor-pointer transition-all duration-200 ease-in-out next"

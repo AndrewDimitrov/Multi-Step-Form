@@ -1,6 +1,11 @@
 "use client";
 
-const Step4 = ({ formData, showPreviousComponent, showClickedComponent }) => {
+const Step4 = ({
+  formData,
+  showPreviousComponent,
+  showClickedComponent,
+  validateAndGoToFinal,
+}) => {
   const planPrice = () => {
     if (formData.selectedPlan === "arcade") return 9;
     else if (formData.selectedPlan === "advanced") return 12;
@@ -122,7 +127,7 @@ const Step4 = ({ formData, showPreviousComponent, showClickedComponent }) => {
             className="text-[20.8px] font-extrabold"
             style={{ color: "hsl(243, 100%, 62%)" }}
           >
-            {total}
+            ${total}
             {formData.yearly ? "/yr" : "/mo"}
           </p>
         </div>
@@ -138,6 +143,7 @@ const Step4 = ({ formData, showPreviousComponent, showClickedComponent }) => {
         <button
           className="text-white border-none py-4 px-6 rounded-lg font-medium text-base cursor-pointer transition-all duration-200 ease-in-out next"
           style={{ background: "hsl(243, 100%, 62%)" }}
+          onClick={validateAndGoToFinal}
         >
           Confirm
         </button>
