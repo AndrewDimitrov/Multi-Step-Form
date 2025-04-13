@@ -55,11 +55,19 @@ export default function Home() {
 
     // Check if there are any errors
     if (errors.name || errors.email || errors.phone) {
-      // If errors exist, navigate back to Step1
       setCurrentComponent(0);
     } else {
-      // If no errors, proceed to the Final step
       setCurrentComponent("Final");
+      setFormData(() => ({
+        name: "",
+        email: "",
+        phone: "",
+        yearly: false,
+        selectedPlan: "arcade",
+        firstAdd: false,
+        secondAdd: false,
+        thirdAdd: false,
+      }));
     }
   };
 
