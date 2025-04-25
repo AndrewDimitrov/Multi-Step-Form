@@ -1,11 +1,19 @@
 "use client";
 
+import React, { useState } from "react";
+
 const Step4 = ({
   formData,
   showPreviousComponent,
   showClickedComponent,
   validateAndGoToFinal,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleConfirmClick = () => {
+    validateAndGoToFinal(setIsSubmitting);
+  };
+
   const planPrice = () => {
     if (formData.selectedPlan === "arcade") return 9;
     else if (formData.selectedPlan === "advanced") return 12;
@@ -141,11 +149,14 @@ const Step4 = ({
           Go Back
         </button>
         <button
-          className="text-white border-none py-4 px-6 rounded-lg font-medium text-base cursor-pointer transition-all duration-200 ease-in-out next"
+          disabled={isSubmitting}
+          className={`text-white border-none py-4 px-6 rounded-lg font-medium text-base cursor-pointer transition-all duration-200 ease-in-out next ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           style={{ background: "hsl(243, 100%, 62%)" }}
-          onClick={validateAndGoToFinal}
+          onClick={handleConfirmClick}
         >
-          Confirm
+          {isSubmitting ? "Submitting..." : "Confirm"}
         </button>
       </div>
     </div>

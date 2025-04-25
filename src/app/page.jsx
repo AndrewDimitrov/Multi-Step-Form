@@ -49,13 +49,16 @@ export default function Home() {
   };
 
   // This function will be called from Step4 Confirm
-  const validateAndGoToFinal = async () => {
+  const validateAndGoToFinal = async (setIsSubmitting) => {
+    setIsSubmitting(true);
+
     const errors = validateFormData(formData); // Validate the form data
     setFormErrors(errors); // Update the formErrors state with the validation results
 
     // Check if there are any errors
     if (errors.name || errors.email || errors.phone) {
       setCurrentComponent(0);
+      setIsSubmitting(false);
     } else {
       try {
         await fetch("/api/submit", {
@@ -65,6 +68,8 @@ export default function Home() {
         });
       } catch (e) {
         console.log(e);
+      } finally {
+        setIsSubmitting(false);
       }
 
       setCurrentComponent("Final");
