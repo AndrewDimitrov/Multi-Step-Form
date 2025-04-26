@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { validateFormData } from "../utils/validation";
+import axios from "axios";
 
-const Step1 = dynamic(() => import("../../components/Step1"), { ssr: false });
-const Step2 = dynamic(() => import("../../components/Step2"), { ssr: false });
-const Step3 = dynamic(() => import("../../components/Step3"), { ssr: false });
-const Step4 = dynamic(() => import("../../components/Step4"), { ssr: false });
-const Final = dynamic(() => import("../../components/Final"), { ssr: false });
+const Step1 = dynamic(() => import("../components/Step1"), { ssr: false });
+const Step2 = dynamic(() => import("../components/Step2"), { ssr: false });
+const Step3 = dynamic(() => import("../components/Step3"), { ssr: false });
+const Step4 = dynamic(() => import("../components/Step4"), { ssr: false });
+const Final = dynamic(() => import("../components/Final"), { ssr: false });
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -61,10 +62,10 @@ export default function Home() {
       setIsSubmitting(false);
     } else {
       try {
-        await fetch("/api/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+        await axios.post("/api/submit", formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
       } catch (e) {
         console.log(e);
