@@ -62,11 +62,7 @@ export default function Home() {
       setIsSubmitting(false);
     } else {
       try {
-        await axios.post("/api/submit", formData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        await axios.post("/api/submit", formData);
       } catch (e) {
         console.log(e);
       } finally {
